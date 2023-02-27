@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
 from flask_table import Table, Col
 from markupsafe import Markup, escape
-import pickle
-import os
+import scheduling
+import threading
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -30,63 +30,24 @@ class TimeTable(Table):
     thursday = CheckboxCol('thu', td_html_attrs={'class': 'checkbox'})
     friday = CheckboxCol('fri', td_html_attrs={'class': 'checkbox'})
 
-def store_data(data, filename):
-    # create a relative path to the config directory
-    filepath = os.path.join("config", filename)
-    try:
-        # check if the config directory exists
-        if not os.path.exists("config"):
-            # create a new directory
-            os.mkdir("config")
-        # open the file for writing
-        file = open(filepath, "wb")
-        # write the dictionary to the file
-        pickle.dump(data, file)
-    except Exception as e:
-        # handle any other exception
-        print(f"An error occurred: {e}")
-    finally:
-        # close the file if it is opened
-        if "file" in locals():
-            file.close()
-
-def load_data(filename):
-    # create a relative path to the config directory
-    filepath = os.path.join("config", filename)
-    try:
-        # open the file for reading
-        file = open(filepath, "rb")
-        # load the dictionary from the file
-        data = pickle.load(file)
-    except Exception as e:
-        # handle any other exception
-        print(f"An error occurred: {e}")
-    finally:
-        # close the file if it is opened
-        if "file" in locals():
-            file.close()
-            return data
-
 
 @app.route('/T9-155/', methods=['GET', 'POST'])
 @app.route('/T9-105/', methods=['GET', 'POST'])
 @app.route('/T9-107/', methods=['GET', 'POST'])
 def timetable():
     route_name = request.url_rule.rule[1:-1]
-
-    times = ['8:00', '9:40', '11:20', '13:00', '14:40', '16:20', '18:00', '19:40']
     
     if request.method == "GET":
         # Set initial values for checkboxes
 
-        data = load_data(route_name)
+        data = scheduling.load_data(route_name)
         if not data: # check if data is empty
             data = {} # create an empty dictionary
 
         items = []
 
         for i in range(8):  
-            items.append(dict(time=times[i], 
+            items.append(dict(time=scheduling.times[i], 
                       monday=(i, str(i) in data.get('mon', [])),
                       tuesday=(i, str(i) in data.get('tue', [])),
                       wednesday=(i, str(i) in data.get('wed', [])),
@@ -99,14 +60,22 @@ def timetable():
     elif request.method == "POST":
         # Get values of checkboxes
         data = request.form.to_dict(False)
-        store_data(data, route_name);
-        return "Saved!"
+        scheduling.store_data(data, route_name)
+        scheduling.add_jobs(route_name)
+        return "Done"
 
 @app.route('/')
 def index():
-
     return render_template("index.html")
 
+@app.route('/clear-all/<target>', methods=['POST'])
+def clear_all():
+    print(target)
 
 if __name__ == '__main__':
-   app.run(debug=True)
+    
+    for key in scheduling.schedules:
+        scheduling.schedules[key].start()
+        scheduling.add_jobs(key)
+
+    app.run(debug=True)
