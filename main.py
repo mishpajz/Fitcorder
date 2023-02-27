@@ -31,46 +31,47 @@ class TimeTable(Table):
     friday = CheckboxCol('fri', td_html_attrs={'class': 'checkbox'})
 
 
+def create_table(route_name):
+    data = scheduling.load_data(route_name)
+    if not data: # check if data is empty
+        data = {} # create an empty dictionary
+
+    items = []
+
+    for i in range(8):  
+        items.append(dict(time=scheduling.times[i], 
+                    monday=(i, str(i) in data.get('mon', [])),
+                    tuesday=(i, str(i) in data.get('tue', [])),
+                    wednesday=(i, str(i) in data.get('wed', [])),
+                    thursday=(i, str(i) in data.get('thu', [])),
+                    friday=(i, str(i) in data.get('fri', []))
+                    ))
+    return TimeTable(items)
+
 @app.route('/T9-155/', methods=['GET', 'POST'])
 @app.route('/T9-105/', methods=['GET', 'POST'])
 @app.route('/T9-107/', methods=['GET', 'POST'])
 def timetable():
     route_name = request.url_rule.rule[1:-1]
-    
+
     if request.method == "GET":
-        # Set initial values for checkboxes
-
-        data = scheduling.load_data(route_name)
-        if not data: # check if data is empty
-            data = {} # create an empty dictionary
-
-        items = []
-
-        for i in range(8):  
-            items.append(dict(time=scheduling.times[i], 
-                      monday=(i, str(i) in data.get('mon', [])),
-                      tuesday=(i, str(i) in data.get('tue', [])),
-                      wednesday=(i, str(i) in data.get('wed', [])),
-                      thursday=(i, str(i) in data.get('thu', [])),
-                      friday=(i, str(i) in data.get('fri', []))
-                      ))
-        table = TimeTable(items)
-        return render_template("timetable.html", table=table)
+        return render_template("timetable.html", table=create_table(route_name))
     
     elif request.method == "POST":
-        # Get values of checkboxes
         data = request.form.to_dict(False)
+        special_text = 'Submitted!'
+        if 'submit-all' in data:
+            data.pop('submit-all')
+        if 'clean-all' in request.form:
+            special_text = 'Cleaned!'
+            data = {}
         scheduling.store_data(data, route_name)
         scheduling.add_jobs(route_name)
-        return "Done"
+        return render_template("timetable.html", table=create_table(route_name), special_text=special_text)
 
 @app.route('/')
 def index():
     return render_template("index.html")
-
-@app.route('/clear-all/<target>', methods=['POST'])
-def clear_all():
-    print(target)
 
 if __name__ == '__main__':
     

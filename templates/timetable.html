@@ -34,7 +34,6 @@ tr:nth-child(even) {background-color: #f2f2f2;}
 .active-button { background-color: #2d6cff; }
 
 input[type=submit] {
-  background-color: #f0f0f0;
   border: none;
   border-radius: 10px;
   box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
@@ -42,17 +41,42 @@ input[type=submit] {
   font-size: 16px;
 }
 
-input[type=submit]:hover {
+input[name='submit-all'] {
+  background-color: #f0f0f0;
+}
+
+input[name='submit-all']:hover {
   background-color: #e0e0e0;
 }
 
-input[type=submit]:active {
+input[name='submit-all']:active {
   background-color: #d0d0d0;
 }
 
-.submit-button {
+input[name='clean-all'] {
+  background-color: #ff8585;
+}
+
+input[name='clean-all']:hover {
+  background-color: #ff5757;
+}
+
+input[name='clean-all']:active {
+  background-color: #cd0000;
+}
+
+.submit-button, .clean-button {
   text-align: center;
   padding: 20px;
+}
+
+p.note
+{
+  background-color: #f0f7fb;
+  border-left: solid 4px #3498db;
+  line-height: 18px;
+  overflow: hidden;
+  padding: 12px;
 }
 
 </style>
@@ -73,8 +97,20 @@ input[type=submit]:active {
 <body>
   <form method="POST" action="{{ request.url_rule }}">
     {{ table.__html__() | safe }}
-    <div class="submit-button">
-        <input type="submit" value="Submit">
+    <div class="button-container">
+      <div class="clean-button">
+          <input type="submit" name="clean-all" value="Clean">
+        </div>
+      <div class="submit-button">
+          <input type="submit" name="submit-all" value="Submit">
+      </div>
+    </div>
+    <div class = "button-container">
+      {% if special_text %}
+      <p class='note'>
+        {{ special_text }}
+      </p>
+      {% endif %}
     </div>
   </form>
 </body>
