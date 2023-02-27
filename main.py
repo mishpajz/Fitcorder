@@ -30,8 +30,7 @@ class TimeTable(Table):
 @app.route('/T9-155/', methods=['GET', 'POST'])
 @app.route('/T9-105/', methods=['GET', 'POST'])
 @app.route('/T9-107/', methods=['GET', 'POST'])
-@app.route('/', methods=['GET', 'POST'])
-def index():
+def timetable():
 
     times = ['8:00', '9:40', '11:20', '13:00', '14:40', '16:20', '18:00', '19:40']
     
@@ -47,7 +46,7 @@ def index():
                       thursday=(i, False),
                       friday=(i, False)))
         table = TimeTable(items)
-        return render_template("index.html", table=table)
+        return render_template("timetable.html", table=table)
     
     elif request.method == "POST":
         # Get values of checkboxes
@@ -56,6 +55,10 @@ def index():
         print(data) # You can do something with this data here
         return "You submitted the form."
 
+@app.route('/')
+def index():
+
+    return render_template("index.html")
 
 
 if __name__ == '__main__':
