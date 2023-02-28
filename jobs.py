@@ -5,7 +5,8 @@ import os
 from datetime import datetime
 from signal import SIGINT
 
-LENGTH = 33 #60 * (60 + 30)
+RETRIES = 5
+LENGTH = 60 * (60 + 30 + 5)
 COOKIES = os.path.join("config", "cookies.txt")
 FILENAME = "prednaska-"
 
@@ -19,10 +20,17 @@ ydl_opts = {
     
 
 def download_video(url):
-    file_name = FILENAME + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + url.split('/')[-2] + '.mp4'
-    ydl_opts['outtmpl'] = os.path.join("volume", file_name)
-    ydl = yt_dlp.YoutubeDL(ydl_opts)
-    error_code = ydl.download(url)
+    for i in range(RETRIES):
+        try:
+            file_name = FILENAME + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + url.split('/')[-2] + '.mp4'
+            ydl_opts['outtmpl'] = os.path.join("volume", file_name)
+            ydl = yt_dlp.YoutubeDL(ydl_opts)
+            error_code = ydl.download(url)
+        except KeyboardInterrupt:
+            break
+        except Exception:
+            time.sleep(60)
+            continue
 
 
 def job(on):
