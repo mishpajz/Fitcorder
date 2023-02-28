@@ -13,7 +13,7 @@ schedules = {
 
 #times = ['7:30', '9:15', '11:00', '12:45', '14:30', '16:15', '18:00', '19:45']
 
-times = ['23:16', '23:18', '23:20', '23:22', '23:24', '23:26', '23:28', '23:30']
+times = ['1:14', '23:18', '23:20', '23:22', '23:24', '23:26', '23:28', '23:30']
 
 def store_data(data, filename):
     # create a relative path to the config directory
@@ -73,7 +73,7 @@ def add_jobs(target):
 
             job = schedules[target].add_job(jobs.job, 
                                             'cron', 
-                                            args=[target], 
+                                            args=[urls[target]], 
                                             day_of_week=key,
                                             hour=hours,
                                             minute=minutes)
