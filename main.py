@@ -67,7 +67,7 @@ def timetable():
         return render_template("timetable.html", table=create_table(route_name), urls=scheduling.urls, special_text=special_text)
 
 for key in scheduling.urls:
-    app.route('/' + key + '/')(timetable)
+    app.route('/' + key + '/', methods=['GET', 'POST'])(timetable)
 
 @app.route('/')
 def index():
