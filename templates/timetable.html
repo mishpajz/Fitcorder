@@ -82,15 +82,11 @@ p.note
 </style>
 
 <div class="button-container"> 
-    <a href="/T9-155/">
-        <button class="modern-button {{ 'active-button' if request.url_rule.rule == '/T9-155/' else '' }}">T9-155</button> 
+  {% for key in urls %}
+    <a href="/{{ key }}/">
+        <button class="modern-button {{ 'active-button' if request.url_rule.rule == '/' + key + '/' else '' }}"> {{ key }} </button> 
     </a> 
-    <a href="/T9-105/"> 
-        <button class="modern-button {{ 'active-button' if request.url_rule.rule == '/T9-105/' else '' }}">T9-105</button> 
-    </a> 
-    <a href="/T9-107/"> 
-        <button class="modern-button {{ 'active-button' if request.url_rule.rule == '/T9-107/' else '' }}">T9-107</button> 
-    </a> 
+  {% endfor %}
 </div>
 
 </head>

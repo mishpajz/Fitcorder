@@ -48,14 +48,11 @@ def create_table(route_name):
                     ))
     return TimeTable(items)
 
-@app.route('/T9-155/', methods=['GET', 'POST'])
-@app.route('/T9-105/', methods=['GET', 'POST'])
-@app.route('/T9-107/', methods=['GET', 'POST'])
 def timetable():
     route_name = request.url_rule.rule[1:-1]
 
     if request.method == "GET":
-        return render_template("timetable.html", table=create_table(route_name))
+        return render_template("timetable.html", table=create_table(route_name), urls=scheduling.urls)
     
     elif request.method == "POST":
         data = request.form.to_dict(False)
@@ -67,11 +64,14 @@ def timetable():
             data = {}
         scheduling.store_data(data, route_name)
         scheduling.add_jobs(route_name)
-        return render_template("timetable.html", table=create_table(route_name), special_text=special_text)
+        return render_template("timetable.html", table=create_table(route_name), urls=scheduling.urls, special_text=special_text)
+
+for key in scheduling.urls:
+    app.route('/' + key + '/')(timetable)
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template("index.html", urls=scheduling.urls)
 
 if __name__ == '__main__':
     

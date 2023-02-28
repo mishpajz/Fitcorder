@@ -5,11 +5,16 @@ import time
 import jobs
 from apscheduler.schedulers.background import BackgroundScheduler
 
-schedules = {
-    "T9-155": BackgroundScheduler(),
-    "T9-105": BackgroundScheduler(),
-    "T9-107": BackgroundScheduler()
+urls = {
+    "T9-155": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-11/playlist.m3u8",
+    "T9-105": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-12/playlist.m3u8",
+    "T9-107": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-13/playlist.m3u8",
+    "TK-BS": "https://cdn.streaming.cesnet.cz/fa-cvut/fit-01/playlist.m3u8"
 }
+
+schedules = {}
+for key in urls:
+    schedules[key] = BackgroundScheduler()
 
 #times = ['7:30', '9:15', '11:00', '12:45', '14:30', '16:15', '18:00', '19:45']
 
@@ -51,12 +56,6 @@ def load_data(filename):
         if "file" in locals():
             file.close()
             return data
-
-urls = {
-    "T9-155": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-11/playlist.m3u8",
-    "T9-105": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-12/playlist.m3u8",
-    "T9-107": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-13/playlist.m3u8"
-}
 
 def add_jobs(target):
     data = load_data(target)

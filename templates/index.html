@@ -9,7 +9,7 @@
 
 .modern-button { filter: drop-shadow(2px 2px 2px rgba(141, 141, 141, 0.2)); /* Drop shadow with filter */ }
 
-.modern-button { background-color: #a0bdff; }
+.modern-button { background-color: #2d6cff; }
 
 .button-container {
     display: flex;
@@ -20,13 +20,9 @@
 </style>
 
 <div class="button-container"> 
-    <a href="/T9-155/">
-        <button class="modern-button">T9-155</button> 
+    {% for key in urls %}
+    <a href="/{{ key }}/">
+        <button class="modern-button"> {{ key }} </button> 
     </a> 
-    <a href="/T9-105/"> 
-        <button class="modern-button">T9-105</button> 
-    </a> 
-    <a href="/T9-107/"> 
-        <button class="modern-button">T9-107</button> 
-    </a> 
+  {% endfor %}
 </div>
