@@ -79,4 +79,4 @@ if __name__ == '__main__':
         scheduling.schedules[key].start()
         scheduling.add_jobs(key)
 
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0')
