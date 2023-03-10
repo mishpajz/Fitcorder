@@ -6,7 +6,7 @@ import jobs
 from apscheduler.schedulers.background import BackgroundScheduler
 
 urls = {
-    "T9-155": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-11/playlist.m3u8",
+    "T9-155": "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
     "T9-105": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-12/playlist.m3u8",
     "T9-107": "http://cdn.streaming.cesnet.cz/fa-cvut/fa-13/playlist.m3u8",
     "TK-BS": "https://cdn.streaming.cesnet.cz/fa-cvut/fit-01/playlist.m3u8"
@@ -18,7 +18,7 @@ for key in urls:
 
 #times = ['7:30', '9:15', '11:00', '12:45', '14:30', '16:15', '18:00', '19:45']
 
-times = ['16:30', '14:38', '14:38', '14:38', '14:38', '14:38', '14:38', '14:38']
+times = ['15:20', '14:27', '14:38', '14:38', '14:38', '14:40', '14:42', '14:38']
 
 def store_data(data, filename):
     # create a relative path to the config directory
