@@ -25,12 +25,12 @@ def download_video(url):
             file_name = FILENAME + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + url.split('/')[-2] + '.mp4'
             ydl_opts['outtmpl'] = os.path.join("volume", file_name)
             ydl = yt_dlp.YoutubeDL(ydl_opts)
-            error_code = ydl.download(url)
+            ydl.download(url)
         except KeyboardInterrupt:
             break
         except Exception:
-            time.sleep(60)
             continue
+        time.sleep(60)
 
 
 def job(on):
