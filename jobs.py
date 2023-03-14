@@ -29,6 +29,7 @@ def download_video(url):
         except KeyboardInterrupt:
             break
         except Exception:
+            time.sleep(120)
             continue
         time.sleep(60)
 
